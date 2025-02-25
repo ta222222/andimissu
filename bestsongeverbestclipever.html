@@ -75,21 +75,27 @@
             // Attach event listener to keep video playing when paused
             video.addEventListener('pause', keepPlaying);
 
-            // Attempt to play the video on page load
-            video.play().then(() => {
-                console.log("Video is playing");
-            }).catch(error => {
-                console.error("Error trying to play the video: ", error);
-                // Fallback to user interaction if needed
-                document.body.addEventListener('click', () => {
-                    video.play().then(() => {
-                        console.log("Video is playing on user interaction");
-                        document.body.removeEventListener('click', playVideoOnce);
-                    }).catch(error => {
-                        console.error("Error trying to play the video on user interaction: ", error);
-                    });
+            // Function to handle the user click event
+            function handleUserClick() {
+                // Play the video and SoundCloud track
+                video.play().then(() => {
+                    console.log("Video is playing on user interaction");
+                }).catch(error => {
+                    console.error("Error trying to play the video on user interaction: ", error);
                 });
-            });
+
+                widget.play().then(() => {
+                    console.log("SoundCloud track is playing on user interaction");
+                }).catch(error => {
+                    console.error("Error trying to play the SoundCloud track on user interaction: ", error);
+                });
+
+                // Remove the event listener after the first click to avoid multiple triggers
+                document.body.removeEventListener('click', handleUserClick);
+            }
+
+            // Add click event listener to body
+            document.body.addEventListener('click', handleUserClick);
         });
     </script>
 
