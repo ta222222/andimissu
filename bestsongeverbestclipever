@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoundCloud with Video Background</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            font-family: monospace, sans-serif;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+        }
+
+        .soundcloud-embed {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 75%; /* Set a fixed width for the player */
+            background-color: transparent; /* Make the background invisible */
+            box-shadow: none; /* Remove shadow for cleaner overlay */
+            border: none; /* Remove border */
+        }
+    </style>
+</head>
+<body>
+
+    <video id="background-video" autoplay muted loop class="video-background">
+        <source src="https://github.com/ta222222/andimissu/raw/refs/heads/main/dog.mp4" type="video/mp4">
+    </video>
+
+    <div class="soundcloud-embed">
+        <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/340321748&color=%23000000&auto_play=false&hide_related=false&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"></iframe>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('background-video');
+
+            // Function to ensure video keeps playing
+            function keepPlaying() {
+                if (video.paused) {
+                    video.play().catch(error => {
+                        console.error("Error trying to play the video: ", error);
+                    });
+                }
+            }
+
+            // Attach event listener to keep video playing when paused
+            video.addEventListener('pause', keepPlaying);
+
+            // Attempt to play the video on page load
+            video.play().then(() => {
+                console.log("Video is playing");
+            }).catch(error => {
+                console.error("Error trying to play the video: ", error);
+                // Fallback to user interaction if needed
+                document.body.addEventListener('click', () => {
+                    video.play().then(() => {
+                        console.log("Video is playing on user interaction");
+                        document.body.removeEventListener('click', playVideoOnce);
+                    }).catch(error => {
+                        console.error("Error trying to play the video on user interaction: ", error);
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
