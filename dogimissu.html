@@ -26,13 +26,19 @@
 </head>
 <body>
 
-<video autoplay muted loop class="video-background">
+<video id="background-video" autoplay muted loop class="video-background">
     <source src="https://github.com/ta222222/andimissu/raw/refs/heads/main/dog.mp4" type="video/mp4">
     Your browser does not support HTML5 video.
 </video>
 
 <script>
-    console.log("Full-screen background video loaded.");
+    window.onload = function() {
+        const video = document.getElementById('background-video');
+        video.play().catch(error => {
+            console.error("Error trying to play the video: ", error);
+        });
+        console.log("Full-screen background video loaded.");
+    };
 </script>
 
 </body>
