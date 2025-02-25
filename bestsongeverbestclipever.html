@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SoundCloud with Video Background</title>
+    <title>bestsongeverbestclipever</title>
     <style>
         body, html {
             height: 100%;
@@ -34,8 +34,6 @@
             box-shadow: none; /* Remove shadow for cleaner overlay */
             border: none; /* Remove border */
         }
-
-        
     </style>
 </head>
 <body>
@@ -45,12 +43,25 @@
     </video>
 
     <div class="soundcloud-embed">
- <iframe width="77%" height="65" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/340321748&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&show_artwork=false"></iframe>
+        <iframe id="soundcloud-player" width="77%" height="65" scrolling="no" frameborder="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/340321748&color=%23000000&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&show_artwork=false"></iframe>
     </div>
+
+    <script src="https://w.soundcloud.com/player/api.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const video = document.getElementById('background-video');
+            const iframe = document.getElementById('soundcloud-player');
+            const widget = SC.Widget(iframe);
+
+            // Listen for play event from the SoundCloud player
+            widget.bind(SC.Widget.Events.PLAY, function() {
+                video.play().then(() => {
+                    console.log("Video is playing because SoundCloud track is playing.");
+                }).catch(error => {
+                    console.error("Error trying to play the video: ", error);
+                });
+            });
 
             // Function to ensure video keeps playing
             function keepPlaying() {
