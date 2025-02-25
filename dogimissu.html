@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>dogimissu</title>
+    <title>HTML Preview</title>
     <style>
         body, html {
             height: 100%;
@@ -34,27 +34,33 @@
     document.addEventListener('DOMContentLoaded', function() {
         const video = document.getElementById('background-video');
 
-        function playVideo() {
-            video.play().then(() => {
-                console.log("Video is playing");
-            }).catch(error => {
-                console.error("Error trying to play the video: ", error);
-                // Fallback to user interaction if needed
-                document.body.addEventListener('click', playVideoOnce);
-            });
+        // Function to ensure video keeps playing
+        function keepPlaying() {
+            if (video.paused) {
+                video.play().catch(error => {
+                    console.error("Error trying to play the video: ", error);
+                });
+            }
         }
 
-        function playVideoOnce() {
-            video.play().then(() => {
-                console.log("Video is playing on user interaction");
-                document.body.removeEventListener('click', playVideoOnce);
-            }).catch(error => {
-                console.error("Error trying to play the video on user interaction: ", error);
-            });
-        }
+        // Attach event listener to keep video playing when paused
+        video.addEventListener('pause', keepPlaying);
 
         // Attempt to play the video on page load
-        playVideo();
+        video.play().then(() => {
+            console.log("Video is playing");
+        }).catch(error => {
+            console.error("Error trying to play the video: ", error);
+            // Fallback to user interaction if needed
+            document.body.addEventListener('click', () => {
+                video.play().then(() => {
+                    console.log("Video is playing on user interaction");
+                    document.body.removeEventListener('click', playVideoOnce);
+                }).catch(error => {
+                    console.error("Error trying to play the video on user interaction: ", error);
+                });
+            });
+        });
     });
 </script>
 
